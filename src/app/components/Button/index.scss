@@ -1,0 +1,18 @@
+.Button {
+  padding: 11px 34px;
+  font-size: 1em;
+  background-color: #e50914;
+  border-radius: 4px;
+  border: 1px solid #e50914;
+  color: inherit;
+  outline: none;
+  line-height: 1em;
+
+  &--active {
+    background-color: transparent;
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: #9c070e;
+  }
+}

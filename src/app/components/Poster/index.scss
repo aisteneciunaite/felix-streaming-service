@@ -1,0 +1,15 @@
+.Poster {
+  position: relative;
+  width: 400px;
+
+  &__image {
+    max-width: 100%;
+  }
+
+  &__text {
+    padding: 10px 20px;
+    background-color: #222222;
+    position: absolute;
+    bottom: 0;
+  }
+}

@@ -1,0 +1,16 @@
+.Hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.Hero ~ hr {
+  background-color: #222222;
+  margin: 0;
+  border: none;
+  height: 10px;
+}

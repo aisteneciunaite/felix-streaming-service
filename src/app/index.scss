@@ -1,0 +1,19 @@
+main {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: radial-gradient(#222, #000);
+}
+
+.align-self-center {
+  align-self: center;
+}
+
+.posters {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 100px;
+  justify-items: center;
+  margin-bottom: 50px;
+}
