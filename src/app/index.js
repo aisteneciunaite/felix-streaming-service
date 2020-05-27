@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import Poster from './components/Poster';
 import Spinner from './components/Spinner';
 import heroImage from './images/cinema.jpg';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 const serverUrl = 'https://academy-video-api.herokuapp.com/';
 
 let fetchFreeItems = async () => {
@@ -48,26 +49,38 @@ class App extends React.Component {
     return (
       <>
         <Hero title="Wanna more Content ?" background={heroImage}>
-          <Button>Get Access</Button>
+          <Button onClick={() => this.setState({ ...this.state, isLoaded: !isLoaded })}>
+            Get Access
+          </Button>
         </Hero>
         <main>
-          {!isLoaded ? (
-            <Spinner />
-          ) : (
-            <>
-              <div className="posters">
-                {items.map(item => (
-                  <Poster
-                    key={item.id}
-                    title={item.title}
-                    image={item.image}
-                    description={item.description}
-                  />
-                ))}
+          <SwitchTransition>
+            <CSSTransition
+              key={!isLoaded ? 'Spinner' : 'Posters'}
+              addEndListener={(node, done) => node.addEventListener('transitionend', done, false)}
+              classNames="fade"
+            >
+              <div>
+                {!isLoaded ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <div className="posters">
+                      {items.map(item => (
+                        <Poster
+                          key={item.id}
+                          title={item.title}
+                          image={item.image}
+                          description={item.description}
+                        />
+                      ))}
+                    </div>
+                    <Button className="align-self-center">Get more content</Button>
+                  </>
+                )}
               </div>
-              <Button className="align-self-center">Get more content</Button>
-            </>
-          )}
+            </CSSTransition>
+          </SwitchTransition>
         </main>
       </>
     );
