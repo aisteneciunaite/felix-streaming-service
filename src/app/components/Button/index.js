@@ -1,14 +1,22 @@
 import React from 'react';
 import './index.scss';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
-function Button({ children, className, onClick }) {
-  const classes = `Button ${className}`;
+function Button({ children, className, onClick, href }) {
+  const classes = className ? `Button ${className}` : 'Button';
+  const Tag = href ? Link : 'button';
 
   return (
-    <button className={classes} onClick={onClick}>
+    <Tag to={href} className={classes} onClick={onClick}>
       {children}
-    </button>
+    </Tag>
   );
 }
+
+Button.prototypes = {
+  onClick: PropTypes.func,
+  className: PropTypes.string,
+};
 
 export default Button;
