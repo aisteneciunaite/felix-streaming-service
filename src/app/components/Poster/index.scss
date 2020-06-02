@@ -4,6 +4,7 @@
 
   &__image {
     max-width: 100%;
+    cursor: pointer;
   }
 
   &__text {
@@ -19,6 +20,11 @@
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+    cursor: pointer;
+  }
+
+  .Title {
+    cursor: pointer;
   }
 
   &__animate {

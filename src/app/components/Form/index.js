@@ -13,13 +13,16 @@ class Form extends Component {
         {this.props.inputs.map(input => (
           <Input input={input} key={input.id} />
         ))}
-        <Button className="align-self-center">{this.props.submitButtonText}</Button>
+        <span className="Form__alert">{this.props.errorMessage}</span>
+        <Button className="align-self-center" onClick={this.props.onSubmit}>
+          {this.props.submitButtonText}
+        </Button>
       </form>
     );
   }
 }
 
-Form.prototypes = {
+Form.propTypes = {
   submitButtonText: PropTypes.string.isRequired,
 };
 

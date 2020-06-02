@@ -6,13 +6,7 @@ import Poster from '../components/Poster';
 import Spinner from '../components/Spinner';
 import heroImage from '../images/cinema.jpg';
 
-const serverUrl = 'https://academy-video-api.herokuapp.com/';
-
-let fetchFreeItems = async () => {
-  let data = await fetch(serverUrl + 'content/free-items');
-  let items = await data.json();
-  return items;
-};
+import { fetchFreeItems } from '../modules/api';
 
 class Home extends Component {
   constructor(props) {
@@ -24,28 +18,22 @@ class Home extends Component {
     };
   }
 
-  componentDidMount() {
-    // setTimeout(() => {
-    //   this.setState({ isLoaded: true });
-    // }, 600);
-    fetchFreeItems().then(
-      result => {
-        this.setState({
-          isLoaded: true,
-          items: result,
-        });
-      },
-      error => {
-        this.setState({
-          isLoaded: true,
-          error,
-        });
-      }
-    );
+  async componentDidMount() {
+    try {
+      const result = await fetchFreeItems();
+      this.setState({
+        isLoaded: true,
+        items: result,
+      });
+    } catch (error) {
+      this.setState({
+        isLoaded: true,
+        error,
+      });
+    }
   }
 
   render() {
-    // console.log('Rendered App');
     const { isLoaded, items } = this.state;
     return (
       <>
@@ -62,12 +50,7 @@ class Home extends Component {
             <>
               <div className="posters">
                 {items.map(item => (
-                  <Poster
-                    key={item.id}
-                    title={item.title}
-                    image={item.image}
-                    description={item.description}
-                  />
+                  <Poster key={item.id} {...item} />
                 ))}
               </div>
               <Button className="align-self-center">Get more content</Button>

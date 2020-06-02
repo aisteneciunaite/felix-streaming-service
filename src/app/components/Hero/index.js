@@ -17,7 +17,7 @@ function Hero({ title, background, children }) {
   );
 }
 
-Hero.prototypes = {
+Hero.propTypes = {
   title: PropTypes.string,
   background: PropTypes.string.isRequired,
 };

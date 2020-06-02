@@ -13,7 +13,7 @@ class Input extends Component {
   }
 
   render() {
-    let { id, displayName, icon, autoFocus, type } = this.props.input;
+    let { id, displayName, icon, autoFocus, type, ref } = this.props.input;
     let iconElement = icon && (
       <img
         className="Input__icon"
@@ -29,7 +29,13 @@ class Input extends Component {
           {displayName}
         </label>
         <div className="Input__box">
-          <input autoFocus={autoFocus} className="Input__element" type={this.state.type} id={id} />
+          <input
+            autoFocus={autoFocus}
+            className="Input__element"
+            type={this.state.type}
+            id={id}
+            ref={ref}
+          />
           {iconElement}
         </div>
       </div>
@@ -37,13 +43,15 @@ class Input extends Component {
   }
 }
 
-Input.prototypes = {
+Input.propTypes = {
   input: PropTypes.exact({
     id: PropTypes.string.isRequired,
     displayName: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['checkbox', 'email', 'number', 'password', 'radio', 'search'])
+    type: PropTypes.oneOf(['checkbox', 'email', 'number', 'password', 'radio', 'search', 'text'])
       .isRequired,
     icon: PropTypes.string,
+    autoFocus: PropTypes.bool,
+    ref: PropTypes.any,
   }),
 };
 

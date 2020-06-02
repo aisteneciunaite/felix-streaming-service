@@ -14,7 +14,7 @@ function Button({ children, className, onClick, href }) {
   );
 }
 
-Button.prototypes = {
+Button.propTypes = {
   onClick: PropTypes.func,
   className: PropTypes.string,
 };
