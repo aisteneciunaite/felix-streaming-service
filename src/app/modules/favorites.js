@@ -3,6 +3,10 @@ export function getFavorites() {
   return favorites ? favorites : [];
 }
 
+export function saveFavorites(favorites) {
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+}
+
 export function isFavorite(itemId) {
   const favorites = getFavorites();
   if (!favorites.length) return false;
@@ -16,5 +20,5 @@ export function toggleFavorite(itemId) {
   } else {
     favorites.push(itemId);
   }
-  localStorage.setItem('favorites', JSON.stringify(favorites));
+  saveFavorites(favorites);
 }

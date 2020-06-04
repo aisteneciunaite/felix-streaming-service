@@ -1,34 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import Button from '../components/Button';
-import Poster from '../components/Poster';
+import Card from '../components/Card';
 import Spinner from '../components/Spinner';
 
 import { fetchItems } from '../modules/api';
 
-function Content() {
+function Content({ favorites, setFavorites }) {
   const [state, setState] = useState({
-    error: null,
     isLoaded: false,
     items: [],
   });
   const { isLoaded, items } = state;
 
+  const getItems = useCallback(async () => {
+    try {
+      const result = await fetchItems();
+      setState({
+        isLoaded: true,
+        items: result.map(item => {
+          item.isFavorite = favorites.includes(item.id);
+          return item;
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [favorites]);
+
   useEffect(() => {
-    fetchItems()
-      .then(items => {
-        setState({
-          isLoaded: true,
-          items,
-        });
-      })
-      .catch(error =>
-        setState({
-          isLoaded: true,
-          error,
-        })
-      );
-  }, []);
+    getItems();
+  }, [getItems]);
 
   return (
     <>
@@ -39,7 +41,7 @@ function Content() {
           <>
             <div className="posters">
               {items.map(item => (
-                <Poster key={item.id} {...item} />
+                <Card key={item.id} setFavorites={setFavorites} {...item} />
               ))}
             </div>
             <Button className="align-self-center">Get more content</Button>

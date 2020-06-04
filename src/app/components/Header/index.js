@@ -1,28 +1,34 @@
 import React from 'react';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 // import
 import Button from '../Button';
-import { signOut } from '../../modules/auth';
+import { removeToken, isUserLoggedIn, getToken } from '../../modules/auth';
+import { logout } from '../../modules/api';
 
 function Header() {
+  const userLoggedIn = isUserLoggedIn();
+
+  const history = useHistory();
+  async function handleSignOut() {
+    if (!userLoggedIn) return;
+    const token = getToken();
+    await logout(token);
+    removeToken();
+    console.log('user logged out');
+    history.push('/');
+  }
+
   return (
     <header>
       <Link className="logo" to="/">
         <span>F</span>
       </Link>
-      <Switch>
-        {['/', '/login', '/register'].map(path => (
-          <Route key={path} exact path={path}>
-            <Button href="/login">Sign in</Button>
-          </Route>
-        ))}
-        <Route>
-          <Button onClick={signOut} href="/">
-            Sign out
-          </Button>
-        </Route>
-      </Switch>
+      {userLoggedIn ? (
+        <Button onClick={handleSignOut}>Sign out</Button>
+      ) : (
+        <Button href="/login">Sign in</Button>
+      )}
     </header>
   );
 }

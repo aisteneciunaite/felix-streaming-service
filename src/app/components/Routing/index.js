@@ -3,6 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { isUserLoggedIn } from '../../modules/auth';
 
 export function PrivateRoute(props) {
+  console.log('private route');
   return isUserLoggedIn() ? <Route {...props} /> : <Redirect to="/login" />;
 }
 

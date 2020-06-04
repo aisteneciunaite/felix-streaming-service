@@ -1,6 +1,6 @@
 import './index.scss';
-import React from 'react';
-import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { PrivateRoute, PublicRoute } from './components/Routing';
 import PageLayout from './components/PageLayout';
@@ -9,7 +9,14 @@ import Login from './pages/Login';
 import Content from './pages/Content';
 import SingleContentItem from './pages/SingleContentItem';
 
+import { getFavorites, saveFavorites } from './modules/favorites';
+
 function App() {
+  const [favoriteItems, setFavoriteItems] = useState(getFavorites());
+  useEffect(() => {
+    saveFavorites(favoriteItems);
+    console.log('favorites saved to local storage');
+  }, [favoriteItems]);
   return (
     <Router>
       <PageLayout>
@@ -18,13 +25,13 @@ function App() {
             <Login />
           </PublicRoute>
           <PrivateRoute exact path="/content">
-            <Content />
+            <Content favorites={favoriteItems} setFavorites={setFavoriteItems} />
           </PrivateRoute>
-          <PrivateRoute path="/content/:id">
-            <SingleContentItem />
-          </PrivateRoute>
+          <Route path="/content/:id">
+            <SingleContentItem favorites={favoriteItems} setFavorites={setFavoriteItems} />
+          </Route>
           <PublicRoute exact path="/">
-            <Home />
+            <Home favorites={favoriteItems} setFavorites={setFavoriteItems} />
           </PublicRoute>
         </Switch>
       </PageLayout>

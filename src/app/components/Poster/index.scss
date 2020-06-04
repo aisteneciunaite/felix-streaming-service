@@ -1,36 +1,6 @@
 .Poster {
-  position: relative;
-  width: 400px;
-
-  &__image {
-    max-width: 100%;
-    cursor: pointer;
-  }
-
-  &__text {
-    padding: 10px 20px;
-    background-color: var(--dark-grey);
-    position: absolute;
-    bottom: 0;
-  }
-
-  &__description {
-    max-height: 4.5em;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    cursor: pointer;
-  }
-
-  .Title {
-    cursor: pointer;
-  }
-
-  &__animate {
-    -webkit-animation-duration: 1s;
-    animation-duration: 1s;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
+  margin-right: 26px;
+  img {
+    max-width: 316px;
   }
 }

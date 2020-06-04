@@ -1,25 +1,23 @@
 import './index.scss';
 
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../Button';
 import Input from '../Input';
 
-class Form extends Component {
-  render() {
-    return (
-      <form className="Form">
-        {this.props.inputs.map(input => (
-          <Input input={input} key={input.id} />
-        ))}
-        <span className="Form__alert">{this.props.errorMessage}</span>
-        <Button className="align-self-center" onClick={this.props.onSubmit}>
-          {this.props.submitButtonText}
-        </Button>
-      </form>
-    );
-  }
+function Form(props) {
+  return (
+    <form className="Form">
+      {props.inputs.map(input => (
+        <Input input={input} key={input.id} />
+      ))}
+      <span className="Form__alert">{props.errorMessage}</span>
+      <Button className="align-self-center" onClick={props.onSubmit}>
+        {props.submitButtonText}
+      </Button>
+    </form>
+  );
 }
 
 Form.propTypes = {

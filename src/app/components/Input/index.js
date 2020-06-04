@@ -1,46 +1,37 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './index.scss';
 
-class Input extends Component {
-  state = { type: this.props.input.type };
+function Input(props) {
+  const [state, setstate] = useState({ type: props.input.type });
 
-  togglePasswordDisplay() {
-    this.setState(prevState => {
+  function togglePasswordDisplay() {
+    setstate(prevState => {
       let newType = prevState.type === 'password' ? 'text' : 'password';
       return { ...prevState, type: newType };
     });
   }
-
-  render() {
-    let { id, displayName, icon, autoFocus, type, ref } = this.props.input;
-    let iconElement = icon && (
-      <img
-        className="Input__icon"
-        src={icon}
-        alt=""
-        onMouseDown={type === 'password' && this.togglePasswordDisplay.bind(this)}
-        onMouseUp={type === 'password' && this.togglePasswordDisplay.bind(this)}
-      />
-    );
-    return (
-      <div className="Input">
-        <label className="Input__label" htmlFor={id}>
-          {displayName}
-        </label>
-        <div className="Input__box">
-          <input
-            autoFocus={autoFocus}
-            className="Input__element"
-            type={this.state.type}
-            id={id}
-            ref={ref}
-          />
-          {iconElement}
-        </div>
+  let { id, displayName, icon, type, ref } = props.input;
+  let iconElement = icon && (
+    <img
+      className="Input__icon"
+      src={icon}
+      alt=""
+      onMouseDown={type === 'password' && togglePasswordDisplay}
+      onMouseUp={type === 'password' && togglePasswordDisplay}
+    />
+  );
+  return (
+    <div className="Input">
+      <label className="Input__label" htmlFor={id}>
+        {displayName}
+      </label>
+      <div className="Input__box">
+        <input className="Input__element" type={state.type} id={id} ref={ref} />
+        {iconElement}
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 Input.propTypes = {

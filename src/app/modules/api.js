@@ -17,7 +17,7 @@ export async function login({ username, password }) {
       'Content-Type': 'application/json',
     },
   });
-  if (!response.ok) throw new Error('login failed');
+  if (!response.ok) throw response;
   return await response.json();
 }
 
@@ -29,8 +29,8 @@ export async function logout(token) {
       'Content-Type': 'application/json',
     },
   });
-  if (!response.ok) throw new Error('logout failed');
-  return await response.json();
+  if (!response.ok) throw response;
+  return await response.ok;
 }
 
 export async function register(data) {
@@ -41,7 +41,7 @@ export async function register(data) {
       'Content-Type': 'application/json',
     },
   });
-  if (!response.ok) throw new Error('register failed');
+  if (!response.ok) throw response;
   return await response.json();
 }
 
@@ -59,7 +59,7 @@ export async function fetchItems() {
       authorisation: token,
     },
   });
-  if (!response.ok) throw new Error('fetch failed');
+  if (!response.ok) throw response;
   return await response.json();
 }
 

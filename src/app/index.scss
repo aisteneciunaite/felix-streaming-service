@@ -18,6 +18,18 @@ main {
   margin-bottom: 50px;
 }
 
+.SingleContentItem {
+  box-sizing: border-box;
+  max-width: 960px;
+  padding: 53px;
+  display: flex;
+  flex: 1;
+
+  &__Button {
+    margin-right: 22px;
+  }
+}
+
 //for css transition
 
 @-webkit-keyframes fadeIn {
