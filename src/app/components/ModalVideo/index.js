@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import './index.scss';
 
 function ModalVideo({ setShowModal, video }) {
-  function hideModal() {
-    setShowModal(false);
+  const modal = useRef(null);
+  function hideModal(e) {
+    if (e.target !== modal) {
+      setShowModal(false);
+    }
   }
   return (
     <div className="Modal" onClick={hideModal}>
-      <iframe title="video" src={video} frameBorder="0" allowFullScreen />
+      <iframe title="video" src={video} frameBorder="0" allowFullScreen ref={modal} />
     </div>
   );
 }

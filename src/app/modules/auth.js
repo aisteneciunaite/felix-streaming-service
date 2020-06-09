@@ -8,6 +8,7 @@ export async function signIn(credentials) {
   if (!token) throw new Error('Login failed');
   saveToken(token);
   console.log('user logged in');
+  return token;
 }
 
 export function saveToken(token) {

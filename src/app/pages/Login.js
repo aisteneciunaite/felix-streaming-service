@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Form from '../components/Form';
 import icon from '../images/eye-icon.svg';
-import { isUserLoggedIn, signIn } from '../modules/auth';
+import { signIn } from '../modules/auth';
 
 // POST  https://academy-video-api.herokuapp.com/auth/login
 // username: tester
 // passowrd: netflix
 
-function Login() {
+function Login({ isLoggedIn, dispatchLogIn }) {
   const history = useHistory();
   const [state, setState] = useState({ loginFailed: false });
   const usernameInput = useRef(null);
@@ -22,7 +23,9 @@ function Login() {
       password: passwordInout.current.value,
     };
     try {
-      await signIn(credentials);
+      const token = await signIn(credentials);
+      dispatchLogIn(token);
+
       history.replace('/content');
     } catch (error) {
       setState({ loginFailed: true });
@@ -33,8 +36,10 @@ function Login() {
   useEffect(() => {
     usernameInput.current.focus();
   }, []);
+  useEffect(() => {
+    isLoggedIn && history.push('/content');
+  }, [isLoggedIn, history]);
 
-  isUserLoggedIn() && history.push('/content');
   return (
     <div>
       <Form
@@ -61,4 +66,11 @@ function Login() {
   );
 }
 
-export default Login;
+function mapStateToProps({ auth }) {
+  return { isLoggedIn: auth.isLoggedIn };
+}
+function mapDispatchToProps(dispatch) {
+  return { dispatchLogIn: token => dispatch({ type: 'LOG_IN', token }) };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

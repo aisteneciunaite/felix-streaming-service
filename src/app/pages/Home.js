@@ -8,7 +8,7 @@ import heroImage from '../images/cinema.jpg';
 
 import { fetchFreeItems } from '../modules/api';
 
-function Home({ favorites, setFavorites }) {
+function Home() {
   const [state, setState] = useState({
     error: null,
     isLoaded: false,
@@ -20,31 +20,12 @@ function Home({ favorites, setFavorites }) {
       const result = await fetchFreeItems();
       setState({
         isLoaded: true,
-        items: result.map(item => {
-          item.isFavorite = favorites.includes(item.id);
-          return item;
-        }),
+        items: result,
       });
     } catch (error) {
       console.log(error);
     }
-  }, [favorites]);
-
-  const mapFavorites = useCallback(() => {
-    setState(prevState => {
-      return {
-        isLoaded: true,
-        items: prevState.items.map(item => {
-          item.isFavorite = favorites.includes(item.id);
-          return item;
-        }),
-      };
-    });
-  }, [favorites]);
-
-  useEffect(() => {
-    mapFavorites();
-  }, [mapFavorites]);
+  }, []);
 
   useEffect(() => {
     getItems();
@@ -65,7 +46,7 @@ function Home({ favorites, setFavorites }) {
           <>
             <div className="posters">
               {items.map(item => (
-                <Card key={item.id} setFavorites={setFavorites} {...item} />
+                <Card key={item.id} {...item} />
               ))}
             </div>
             <Button className="align-self-center">Get more content</Button>

@@ -5,6 +5,7 @@ import { fetchItem } from '../modules/api';
 import Spinner from '../components/Spinner';
 import Title from '../components/Title';
 import Button from '../components/Button';
+import FavoriteButton from '../components/FavoriteButton';
 import Poster from '../components/Poster';
 import ModalVideo from '../components/ModalVideo';
 import { isUserLoggedIn } from '../modules/auth';
@@ -13,11 +14,10 @@ function validateContentId(id) {
   return !!id.match(/(\w{6}-.*-\w{6})/g);
 }
 
-function SingleContentItem({ favorites, setFavorites }) {
+function SingleContentItem() {
   const { id } = useParams();
   const history = useHistory();
   const userLoggedIn = isUserLoggedIn();
-  const isFavorite = favorites.includes(id);
 
   const [state, setState] = useState({ isLoaded: false, item: {} });
   const [showModal, setShowModal] = useState(false);
@@ -41,14 +41,6 @@ function SingleContentItem({ favorites, setFavorites }) {
     getItem();
   }, [getItem]);
 
-  function handleFavoriteClick() {
-    setFavorites(prevState => {
-      return prevState.includes(id)
-        ? prevState.filter(prevId => prevId !== id)
-        : prevState.concat(id);
-    });
-  }
-
   function handleWatchBtnClick() {
     setShowModal(true);
   }
@@ -69,12 +61,7 @@ function SingleContentItem({ favorites, setFavorites }) {
                 ▶️
               </span>
             </Button>
-            <Button
-              onClick={handleFavoriteClick}
-              className={isFavorite ? 'SingleContentItem__Button Button--active' : null}
-            >
-              {isFavorite ? 'Remove 💔' : 'Favorite'}
-            </Button>
+            <FavoriteButton id={state.item.id} />
           </div>
         </div>
       </div>

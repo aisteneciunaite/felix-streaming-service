@@ -6,7 +6,7 @@ import Spinner from '../components/Spinner';
 
 import { fetchItems } from '../modules/api';
 
-function Content({ favorites, setFavorites }) {
+function Content() {
   const [state, setState] = useState({
     isLoaded: false,
     items: [],
@@ -18,15 +18,12 @@ function Content({ favorites, setFavorites }) {
       const result = await fetchItems();
       setState({
         isLoaded: true,
-        items: result.map(item => {
-          item.isFavorite = favorites.includes(item.id);
-          return item;
-        }),
+        items: result,
       });
     } catch (error) {
       console.log(error);
     }
-  }, [favorites]);
+  }, []);
 
   useEffect(() => {
     getItems();
@@ -41,7 +38,7 @@ function Content({ favorites, setFavorites }) {
           <>
             <div className="posters">
               {items.map(item => (
-                <Card key={item.id} setFavorites={setFavorites} {...item} />
+                <Card key={item.id} {...item} />
               ))}
             </div>
             <Button className="align-self-center">Get more content</Button>

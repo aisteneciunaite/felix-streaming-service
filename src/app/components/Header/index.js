@@ -1,19 +1,21 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-// import
+// components
 import Button from '../Button';
-import { removeToken, isUserLoggedIn, getToken } from '../../modules/auth';
+
+// modules
 import { logout } from '../../modules/api';
+import { removeToken } from '../../modules/auth';
 
-function Header() {
-  const userLoggedIn = isUserLoggedIn();
-
+function Header({ isLoggedIn, dispatchLogOut, token }) {
   const history = useHistory();
+
   async function handleSignOut() {
-    if (!userLoggedIn) return;
-    const token = getToken();
+    if (!isLoggedIn) return;
     await logout(token);
+    dispatchLogOut(token);
     removeToken();
     console.log('user logged out');
     history.push('/');
@@ -24,7 +26,7 @@ function Header() {
       <Link className="logo" to="/">
         <span>F</span>
       </Link>
-      {userLoggedIn ? (
+      {isLoggedIn ? (
         <Button onClick={handleSignOut}>Sign out</Button>
       ) : (
         <Button href="/login">Sign in</Button>
@@ -32,5 +34,11 @@ function Header() {
     </header>
   );
 }
+function mapStateToProps({ auth }) {
+  return { isLoggedIn: auth.isLoggedIn, token: auth.token };
+}
+function mapDispatchToProps(dispatch) {
+  return { dispatchLogOut: token => dispatch({ type: 'LOG_OUT', token }) };
+}
 
-export default Header;
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
