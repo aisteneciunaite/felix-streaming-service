@@ -17,6 +17,7 @@ function App() {
     saveFavorites(favoriteItems);
     console.log('favorites saved to local storage');
   }, [favoriteItems]);
+
   return (
     <Router>
       <PageLayout>

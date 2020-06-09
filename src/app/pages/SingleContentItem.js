@@ -6,6 +6,7 @@ import Spinner from '../components/Spinner';
 import Title from '../components/Title';
 import Button from '../components/Button';
 import Poster from '../components/Poster';
+import ModalVideo from '../components/ModalVideo';
 import { isUserLoggedIn } from '../modules/auth';
 
 function validateContentId(id) {
@@ -19,7 +20,8 @@ function SingleContentItem({ favorites, setFavorites }) {
   const isFavorite = favorites.includes(id);
 
   const [state, setState] = useState({ isLoaded: false, item: {} });
-  const { image, title, description } = state.item;
+  const [showModal, setShowModal] = useState(false);
+  const { image, title, description, video } = state.item;
 
   const getItem = useCallback(async () => {
     try {
@@ -47,30 +49,37 @@ function SingleContentItem({ favorites, setFavorites }) {
     });
   }
 
+  function handleWatchBtnClick() {
+    setShowModal(true);
+  }
+
   return !state.isLoaded ? (
     <Spinner />
   ) : (
-    <div className="SingleContentItem">
-      <Poster url={image} />
-      <div>
-        <Title>{title}</Title>
-        <p>{description}</p>
+    <>
+      <div className="SingleContentItem">
+        <Poster url={image} />
         <div>
-          <Button className="SingleContentItem__Button">
-            Watch{' '}
-            <span role="img" aria-label="watch">
-              ▶️
-            </span>
-          </Button>
-          <Button
-            onClick={handleFavoriteClick}
-            className={isFavorite ? 'SingleContentItem__Button Button--active' : null}
-          >
-            {isFavorite ? 'Remove 💔' : 'Favorite'}
-          </Button>
+          <Title>{title}</Title>
+          <p>{description}</p>
+          <div>
+            <Button onClick={handleWatchBtnClick} className="SingleContentItem__Button">
+              Watch{' '}
+              <span role="img" aria-label="watch">
+                ▶️
+              </span>
+            </Button>
+            <Button
+              onClick={handleFavoriteClick}
+              className={isFavorite ? 'SingleContentItem__Button Button--active' : null}
+            >
+              {isFavorite ? 'Remove 💔' : 'Favorite'}
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+      {showModal && <ModalVideo setShowModal={setShowModal} video={video} />}
+    </>
   );
 }
 

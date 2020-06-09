@@ -7,10 +7,10 @@ import { getToken } from './auth';
 // get: /content/items
 // get: /content/items/:itemId
 
-const serverUrl = 'https://academy-video-api.herokuapp.com';
+const SERVER_URL = 'https://academy-video-api.herokuapp.com';
 
 export async function login({ username, password }) {
-  const response = await fetch(serverUrl + '/auth/login', {
+  const response = await fetch(SERVER_URL + '/auth/login', {
     method: 'POST',
     body: JSON.stringify({ username, password }),
     headers: {
@@ -22,7 +22,7 @@ export async function login({ username, password }) {
 }
 
 export async function logout(token) {
-  const response = await fetch(serverUrl + '/auth/logout', {
+  const response = await fetch(SERVER_URL + '/auth/logout', {
     method: 'POST',
     body: JSON.stringify({ token }),
     headers: {
@@ -34,7 +34,7 @@ export async function logout(token) {
 }
 
 export async function register(data) {
-  const response = await fetch(serverUrl + '/auth/signup', {
+  const response = await fetch(SERVER_URL + '/auth/signup', {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {
@@ -46,17 +46,17 @@ export async function register(data) {
 }
 
 export async function fetchFreeItems() {
-  const response = await fetch(serverUrl + '/content/free-items');
+  const response = await fetch(SERVER_URL + '/content/free-items');
   if (!response.ok) throw new Error('fetch failed');
   return await response.json();
 }
 
 export async function fetchItems() {
   const token = getToken();
-  const response = await fetch(serverUrl + '/content/items', {
+  const response = await fetch(SERVER_URL + '/content/items', {
     method: 'GET',
     headers: {
-      authorisation: token,
+      authorization: token,
     },
   });
   if (!response.ok) throw response;
@@ -65,7 +65,7 @@ export async function fetchItems() {
 
 export async function fetchItem(id) {
   const token = getToken();
-  const response = await fetch(serverUrl + '/content/items/' + id, {
+  const response = await fetch(SERVER_URL + '/content/items/' + id, {
     method: 'GET',
     headers: {
       authorisation: token,
