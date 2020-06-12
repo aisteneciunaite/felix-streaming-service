@@ -1,10 +1,15 @@
 import { createStore, combineReducers } from 'redux';
-import contentReducer from './content';
-import authReducer from './authentication';
+import content from '../../content';
+import auth from '../../authentication';
 
 const store = createStore(
-  combineReducers({ content: contentReducer, auth: authReducer }),
+  combineReducers({ content: content.contentReducer, auth: auth.authReducer }),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
+
+store.subscribe(() => {
+  store.getState().content.favorites &&
+    localStorage.setItem('favorites', JSON.stringify(store.getState().content.favorites));
+});
 
 export default store;

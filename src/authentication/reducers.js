@@ -1,17 +1,22 @@
-import { isUserLoggedIn, getToken, removeToken } from '../modules/auth';
+import { isUserLoggedIn, getToken } from '../app/modules/token';
+
+import * as types from './types';
 
 const DEFAULT_AUTH_STATE = {
   isLoggedIn: isUserLoggedIn(),
   token: getToken(),
+  error: null,
 };
 
 function authReducer(state = DEFAULT_AUTH_STATE, action) {
   switch (action.type) {
-    case 'LOG_IN':
+    case types.LOG_IN:
       return { ...state, isLoggedIn: true, token: action.token };
-    case 'LOG_OUT':
-      removeToken();
+    case types.LOG_OUT:
       return { ...state, isLoggedIn: false, token: null };
+    case types.AUTH_ERROR: {
+      return { ...state, error: action.error };
+    }
     default:
       return state;
   }

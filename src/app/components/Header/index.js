@@ -1,13 +1,17 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 // components
 import Button from '../Button';
 
+// state management
+import auth from '../../../authentication';
+
 // modules
 import { logout } from '../../modules/api';
-import { removeToken } from '../../modules/auth';
+import { removeToken } from '../../modules/token';
 
 function Header({ isLoggedIn, dispatchLogOut, token }) {
   const history = useHistory();
@@ -29,16 +33,17 @@ function Header({ isLoggedIn, dispatchLogOut, token }) {
       {isLoggedIn ? (
         <Button onClick={handleSignOut}>Sign out</Button>
       ) : (
-        <Button href="/login">Sign in</Button>
+        <Button to="/login">Sign in</Button>
       )}
     </header>
   );
 }
-function mapStateToProps({ auth }) {
-  return { isLoggedIn: auth.isLoggedIn, token: auth.token };
-}
-function mapDispatchToProps(dispatch) {
-  return { dispatchLogOut: token => dispatch({ type: 'LOG_OUT', token }) };
-}
+const enhance = connect(
+  state => ({
+    isLoggedIn: auth.selectors.getLoginState(state),
+    token: auth.selectors.getToken(state),
+  }),
+  dispatch => ({ dispatchLogOut: bindActionCreators(auth.actions.logout, dispatch) })
+);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default enhance(Header);

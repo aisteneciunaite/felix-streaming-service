@@ -1,21 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+
 import { connect } from 'react-redux';
-import { saveFavorites } from '../../modules/favorites';
+import { bindActionCreators } from 'redux';
+
+import content from '../../../content';
 
 import Button from '../Button';
 
-function FavoriteButton({ id, favorites, addFavorite, removeFavorite }) {
-  const isFavorite = favorites.includes(id);
+function FavoriteButton({ id, favorites, isFavorite, toggleFavorite }) {
   const buttonText = isFavorite ? 'Remove 💔' : 'Favorite';
 
   const handleClick = () => {
-    favorites.includes(id) ? removeFavorite(id) : addFavorite(id);
+    toggleFavorite(id, isFavorite);
   };
-
-  useEffect(() => {
-    saveFavorites(favorites);
-  }, [favorites]);
-
   return (
     <Button onClick={handleClick} className={isFavorite ? 'Button--active' : null}>
       {buttonText}
@@ -23,14 +20,12 @@ function FavoriteButton({ id, favorites, addFavorite, removeFavorite }) {
   );
 }
 
-function mapStateToProps({ content }) {
-  return { favorites: content.favorites };
-}
-function mapDispatchToProps(dispatch) {
-  return {
-    addFavorite: id => dispatch({ type: 'ADD_FAVORITE', id }),
-    removeFavorite: id => dispatch({ type: 'REMOVE_FAVORITE', id }),
-  };
-}
+const enhance = connect(
+  (state, { id }) => ({
+    favorites: content.selectors.getFavorites(state),
+    isFavorite: content.selectors.isFavoriteById(state, id),
+  }),
+  dispatch => ({ toggleFavorite: bindActionCreators(content.actions.toggleFavorite, dispatch) })
+);
 
-export default connect(mapStateToProps, mapDispatchToProps)(FavoriteButton);
+export default enhance(FavoriteButton);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './index.scss';
+import icon from '../../images/eye-icon.svg';
 
 function Input(props) {
   const [state, setstate] = useState({ type: props.input.type });
@@ -11,8 +12,8 @@ function Input(props) {
       return { ...prevState, type: newType };
     });
   }
-  let { id, displayName, icon, type, ref } = props.input;
-  let iconElement = icon && (
+  let { id, labelContent, type, ref } = props.input;
+  let iconElement = type === 'password' && (
     <img
       className="Input__icon"
       src={icon}
@@ -24,7 +25,7 @@ function Input(props) {
   return (
     <div className="Input">
       <label className="Input__label" htmlFor={id}>
-        {displayName}
+        {labelContent}
       </label>
       <div className="Input__box">
         <input className="Input__element" type={state.type} id={id} ref={ref} />
@@ -37,13 +38,16 @@ function Input(props) {
 Input.propTypes = {
   input: PropTypes.exact({
     id: PropTypes.string.isRequired,
-    displayName: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['checkbox', 'email', 'number', 'password', 'radio', 'search', 'text'])
-      .isRequired,
+    labelContent: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['email', 'number', 'password', 'search', 'text']).isRequired,
     icon: PropTypes.string,
     autoFocus: PropTypes.bool,
     ref: PropTypes.any,
   }),
 };
+
+export function Radio() {
+  return <input type="radio"></input>;
+}
 
 export default Input;

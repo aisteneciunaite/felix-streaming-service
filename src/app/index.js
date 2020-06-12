@@ -6,15 +6,18 @@ import { Provider } from 'react-redux';
 import store from './state';
 
 //Components
-import { PrivateRoute, PublicRoute } from './components/Routing';
+import PrivateRoute from './components/Routing/PrivateRoute';
+import PublicRoute from './components/Routing/PublicRoute';
 import PageLayout from './components/PageLayout';
 //Pages
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Content from './pages/Content';
 import SingleContentItem from './pages/SingleContentItem';
+import Purchase from './pages/Purchase';
 
 function App() {
+  // console.log(store.getState());
   return (
     <Provider store={store}>
       <Router>
@@ -29,6 +32,9 @@ function App() {
             <Route path="/content/:id">
               <SingleContentItem />
             </Route>
+            <PublicRoute exact path="/purchase">
+              <Purchase />
+            </PublicRoute>
             <PublicRoute exact path="/">
               <Home />
             </PublicRoute>

@@ -3,12 +3,12 @@ import './index.scss';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-function Button({ children, className, onClick, href }) {
+function Button({ children, className, onClick, to }) {
   const classes = className ? `Button ${className}` : 'Button';
-  const Tag = href ? Link : 'button';
+  const Tag = to ? Link : 'button';
 
   return (
-    <Tag to={href} className={classes} onClick={onClick}>
+    <Tag to={to} className={classes} onClick={onClick}>
       {children}
     </Tag>
   );

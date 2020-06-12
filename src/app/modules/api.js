@@ -1,4 +1,4 @@
-import { getToken } from './auth';
+import { getToken } from './token';
 
 // post: /auth/login
 // post: /auth/signup
@@ -47,7 +47,7 @@ export async function register(data) {
 
 export async function fetchFreeItems() {
   const response = await fetch(SERVER_URL + '/content/free-items');
-  if (!response.ok) throw new Error('fetch failed');
+  if (!response.ok) throw response;
   return await response.json();
 }
 
@@ -68,9 +68,9 @@ export async function fetchItem(id) {
   const response = await fetch(SERVER_URL + '/content/items/' + id, {
     method: 'GET',
     headers: {
-      authorisation: token,
+      authorization: token,
     },
   });
-  if (!response.ok) throw new Error('fetch failed');
+  if (!response.ok) throw response;
   return await response.json();
 }

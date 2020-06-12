@@ -1,33 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import content from '../../content';
+import auth from '../../authentication';
 
 import Button from '../components/Button';
-import Card from '../components/Card';
+import MovieCard from '../components/MovieCard';
 import Spinner from '../components/Spinner';
+import useFetch from '../modules/useFetch';
 
-import { fetchItems } from '../modules/api';
+function Content({ dispatchStoreMovies, token, storeItems, setStoreItemsType, storeItemsSource }) {
+  const headers = useRef({ authorization: token });
+  const endpoint = '/content/items';
 
-function Content() {
-  const [state, setState] = useState({
-    isLoaded: false,
-    items: [],
-  });
-  const { isLoaded, items } = state;
-
-  const getItems = useCallback(async () => {
-    try {
-      const result = await fetchItems();
-      setState({
-        isLoaded: true,
-        items: result,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const { isLoaded, payload: items } = useFetch(endpoint, 'GET', headers.current, storeItems);
 
   useEffect(() => {
-    getItems();
-  }, [getItems]);
+    items && items.length && dispatchStoreMovies(items);
+    setStoreItemsType(endpoint);
+  }, [items, dispatchStoreMovies, setStoreItemsType]);
 
   return (
     <>
@@ -37,9 +29,7 @@ function Content() {
         ) : (
           <>
             <div className="posters">
-              {items.map(item => (
-                <Card key={item.id} {...item} />
-              ))}
+              {items && items.map(item => <MovieCard key={item.id} {...item} />)}
             </div>
             <Button className="align-self-center">Get more content</Button>
           </>
@@ -49,4 +39,16 @@ function Content() {
   );
 }
 
-export default Content;
+const enhance = connect(
+  state => ({
+    token: auth.selectors.getToken(state),
+    storeItems: content.selectors.getStoreItems(state),
+    storeItemsSource: content.selectors.getStoreMoviesSource(state),
+  }),
+  dispatch => ({
+    dispatchStoreMovies: bindActionCreators(content.actions.storeContent, dispatch),
+    setStoreItemsType: bindActionCreators(content.actions.setItemsSource, dispatch),
+  })
+);
+
+export default enhance(Content);

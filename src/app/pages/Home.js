@@ -1,42 +1,32 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import content from '../../content';
+import auth from '../../authentication';
 
 import Button from '../components/Button';
 import Hero from '../components/Hero';
-import Card from '../components/Card';
+import MovieCard from '../components/MovieCard';
 import Spinner from '../components/Spinner';
 import heroImage from '../images/cinema.jpg';
 
-import { fetchFreeItems } from '../modules/api';
+import useFetch from '../modules/useFetch';
 
-function Home() {
-  const [state, setState] = useState({
-    error: null,
-    isLoaded: false,
-    items: [],
-  });
+function Home({ dispatchStoreMovies, token, storeItems, setStoreItemsSource, storeItemsSource }) {
+  const headers = useRef({ authorization: token });
+  const endpoint = '/content/free-items';
 
-  const getItems = useCallback(async () => {
-    try {
-      const result = await fetchFreeItems();
-      setState({
-        isLoaded: true,
-        items: result,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const { isLoaded, payload: items } = useFetch(endpoint, 'GET', headers.current, storeItems);
 
   useEffect(() => {
-    getItems();
-  }, [getItems]);
-
-  const { isLoaded, items } = state;
+    items && items.length && dispatchStoreMovies(items);
+  }, [items, dispatchStoreMovies]);
 
   return (
     <>
       <Hero title="Wanna more Content ?" background={heroImage}>
-        <Button onClick={() => setState({ ...state, isLoaded: !isLoaded })}>Get Access</Button>
+        <Button to="/purchase">Get Access</Button>
       </Hero>
 
       <main>
@@ -45,11 +35,11 @@ function Home() {
         ) : (
           <>
             <div className="posters">
-              {items.map(item => (
-                <Card key={item.id} {...item} />
-              ))}
+              {items && items.map(item => <MovieCard key={item.id} {...item} />)}
             </div>
-            <Button className="align-self-center">Get more content</Button>
+            <Button to="/purchase" className="align-self-center">
+              Get more content
+            </Button>
           </>
         )}
       </main>
@@ -57,4 +47,16 @@ function Home() {
   );
 }
 
-export default Home;
+const enhance = connect(
+  state => ({
+    token: auth.selectors.getToken(state),
+    storeItems: content.selectors.getStoreItems(state),
+    storeItemsSource: content.selectors.getStoreMoviesSource(state),
+  }),
+  dispatch => ({
+    dispatchStoreMovies: bindActionCreators(content.actions.storeContent, dispatch),
+    setStoreItemsSource: bindActionCreators(content.actions.setItemsSource, dispatch),
+  })
+);
+
+export default enhance(Home);

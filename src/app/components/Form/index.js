@@ -9,10 +9,9 @@ import Input from '../Input';
 function Form(props) {
   return (
     <form className="Form">
-      {props.inputs.map(input => (
-        <Input input={input} key={input.id} />
-      ))}
+      {props.inputs && props.inputs.map(input => <Input input={input} key={input.id} />)}
       <span className="Form__alert">{props.errorMessage}</span>
+      {props.children}
       <Button className="align-self-center" onClick={props.onSubmit}>
         {props.submitButtonText}
       </Button>

@@ -1,14 +1,4 @@
-import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
-import { isUserLoggedIn } from '../../modules/auth';
-
-export function PrivateRoute(props) {
-  // console.log('private route');
-  return isUserLoggedIn() ? <Route {...props} /> : <Redirect to="/login" />;
-}
-
-export function PublicRoute(props) {
-  return isUserLoggedIn() ? <Redirect to="/content" /> : <Route {...props} />;
-}
+import PrivateRoute from './PrivateRoute';
+import PublicRoute from './PublicRoute';
 
 export default { PrivateRoute, PublicRoute };
