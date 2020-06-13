@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -13,15 +13,11 @@ import heroImage from '../images/cinema.jpg';
 
 import useFetch from '../modules/useFetch';
 
-function Home({ dispatchStoreMovies, token, storeItems, setStoreItemsSource, storeItemsSource }) {
+function Home({ dispatchStoreMovies, token, storeItems }) {
   const headers = useRef({ authorization: token });
   const endpoint = '/content/free-items';
 
   const { isLoaded, payload: items } = useFetch(endpoint, 'GET', headers.current, storeItems);
-
-  useEffect(() => {
-    items && items.length && dispatchStoreMovies(items);
-  }, [items, dispatchStoreMovies]);
 
   return (
     <>
@@ -51,11 +47,9 @@ const enhance = connect(
   state => ({
     token: auth.selectors.getToken(state),
     storeItems: content.selectors.getStoreItems(state),
-    storeItemsSource: content.selectors.getStoreMoviesSource(state),
   }),
   dispatch => ({
     dispatchStoreMovies: bindActionCreators(content.actions.storeContent, dispatch),
-    setStoreItemsSource: bindActionCreators(content.actions.setItemsSource, dispatch),
   })
 );
 

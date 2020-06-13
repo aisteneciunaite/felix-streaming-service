@@ -52,7 +52,7 @@ function Login({ isLoggedIn, dispatchLogIn, authError, setAuthError }) {
     try {
       const token = await signIn(credentials);
       dispatchLogIn(token);
-      setAuthError(null);
+      authError && setAuthError(null);
       history.replace('/content');
     } catch (error) {
       setAuthError(error);

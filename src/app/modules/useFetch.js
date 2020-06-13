@@ -20,22 +20,22 @@ function useFetch(endpoint, method = 'GET', headers, initPayload, shouldStore = 
       const result = await response.json();
       setPayload(result);
       setIsLoaded(true);
+      shouldStore && store.dispatch(content.actions.storeContent(result));
     } catch (error) {
       console.log(error);
     }
-  }, [endpoint, method, headers]);
+  }, [endpoint, method, headers, shouldStore, store]);
 
   useEffect(() => {
     const shouldUpdate =
       endpoint !== content.selectors.getStoreMoviesSource(store.getState()) && shouldStore;
-    console.log('should update', shouldUpdate);
     if (!initPayload || shouldUpdate) {
       getItems();
     } else setIsLoaded(true);
   }, [getItems, initPayload, endpoint, store, shouldStore]);
 
   useEffect(() => {
-    if (shouldStore) {
+    if (endpoint !== content.selectors.getStoreMoviesSource(store.getState()) && shouldStore) {
       store.dispatch(content.actions.setItemsSource(endpoint));
     }
   }, [endpoint, store, shouldStore]);
