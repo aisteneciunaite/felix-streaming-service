@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import auth from '../../authentication';
 
 import Form from '../components/Form';
+import Input from '../components/Input';
+
 import { login } from '../modules/api';
 import { saveToken } from '../modules/token';
 
@@ -23,11 +25,25 @@ async function signIn(credentials) {
   return token;
 }
 
-function Login({ isLoggedIn, dispatchLogIn }) {
+function Login({ isLoggedIn, dispatchLogIn, authError, setAuthError }) {
   const history = useHistory();
-  const [state, setState] = useState({ loginFailed: false });
   const usernameInput = useRef(null);
   const passwordInout = useRef(null);
+
+  const inputs = [
+    {
+      id: 'username',
+      labelContent: 'Usename',
+      type: 'text',
+      ref: usernameInput,
+    },
+    {
+      id: 'password',
+      labelContent: 'Password',
+      type: 'password',
+      ref: passwordInout,
+    },
+  ];
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -38,17 +54,18 @@ function Login({ isLoggedIn, dispatchLogIn }) {
     try {
       const token = await signIn(credentials);
       dispatchLogIn(token);
-
+      setAuthError(null);
       history.replace('/content');
     } catch (error) {
-      setState({ loginFailed: true });
-      console.log(error.message);
+      setAuthError(error);
+      console.log(error);
     }
   }
 
   useEffect(() => {
     usernameInput.current.focus();
   }, []);
+
   useEffect(() => {
     isLoggedIn && history.push('/content');
   }, [isLoggedIn, history]);
@@ -56,31 +73,27 @@ function Login({ isLoggedIn, dispatchLogIn }) {
   return (
     <div>
       <Form
-        errorMessage={state.loginFailed && 'Login failed'}
+        errorMessage={authError && 'Login failed'}
         onSubmit={handleSubmit}
         submitButtonText="Sign In"
-        inputs={[
-          {
-            id: 'username',
-            labelContent: 'Usename',
-            type: 'text',
-            ref: usernameInput,
-          },
-          {
-            id: 'password',
-            labelContent: 'Password',
-            type: 'password',
-            ref: passwordInout,
-          },
-        ]}
-      ></Form>
+      >
+        {inputs.map(input => (
+          <Input input={input} key={input.id} />
+        ))}
+      </Form>
     </div>
   );
 }
 
 const enhance = connect(
-  state => ({ isLoggedIn: auth.selectors.getLoginState(state) }),
-  dispatch => ({ dispatchLogIn: bindActionCreators(auth.actions.login, dispatch) })
+  state => ({
+    isLoggedIn: auth.selectors.getLoginState(state),
+    authError: auth.selectors.getAuthError(state),
+  }),
+  dispatch => ({
+    dispatchLogIn: bindActionCreators(auth.actions.login, dispatch),
+    setAuthError: bindActionCreators(auth.actions.setAuthError, dispatch),
+  })
 );
 
 export default enhance(Login);
