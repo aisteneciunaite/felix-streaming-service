@@ -21,10 +21,9 @@ function validateContentId(id) {
 function SingleContentItem({ isLoggedIn, getStoreMovie, token }) {
   const { id } = useParams();
   const history = useHistory();
-  const [showModal, setShowModal] = useState(false);
 
+  //fetching content
   const headers = useRef({ authorization: token });
-
   const { isLoaded, payload: item } = useFetch(
     `/content/items/${id}`,
     'GET',
@@ -33,11 +32,18 @@ function SingleContentItem({ isLoggedIn, getStoreMovie, token }) {
     false
   );
 
+  //validate url parameter, might be unnecesary
   useEffect(() => {
     !validateContentId(id) && history.push('/content');
-    item && !item.free && !isLoggedIn && history.push('/login');
-  }, [id, item, history, isLoggedIn]);
+  }, [id, history]);
 
+  //validate user is logged in
+  useEffect(() => {
+    item && !item.free && !isLoggedIn && history.push('/login');
+  }, [item, history, isLoggedIn]);
+
+  //modal visible state
+  const [showModal, setShowModal] = useState(false);
   function handleWatchBtnClick() {
     setShowModal(true);
   }

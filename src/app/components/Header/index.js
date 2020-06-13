@@ -11,7 +11,7 @@ import auth from '../../../authentication';
 
 // modules
 import { logout } from '../../modules/api';
-import { removeToken } from '../../modules/token';
+// import { removeToken } from '../../modules/token';
 
 function Header({ isLoggedIn, dispatchLogOut, token }) {
   const history = useHistory();
@@ -20,7 +20,7 @@ function Header({ isLoggedIn, dispatchLogOut, token }) {
     if (!isLoggedIn) return;
     await logout(token);
     dispatchLogOut(token);
-    removeToken();
+    // removeToken();
     console.log('user logged out');
     history.push('/');
   }

@@ -1,5 +1,3 @@
-import { getToken } from './token';
-
 // post: /auth/login
 // post: /auth/signup
 // post: /auth/logout
@@ -39,36 +37,6 @@ export async function register(data) {
     body: JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json',
-    },
-  });
-  if (!response.ok) throw response;
-  return await response.json();
-}
-
-export async function fetchFreeItems() {
-  const response = await fetch(SERVER_URL + '/content/free-items');
-  if (!response.ok) throw response;
-  return await response.json();
-}
-
-export async function fetchItems() {
-  const token = getToken();
-  const response = await fetch(SERVER_URL + '/content/items', {
-    method: 'GET',
-    headers: {
-      authorization: token,
-    },
-  });
-  if (!response.ok) throw response;
-  return await response.json();
-}
-
-export async function fetchItem(id) {
-  const token = getToken();
-  const response = await fetch(SERVER_URL + '/content/items/' + id, {
-    method: 'GET',
-    headers: {
-      authorization: token,
     },
   });
   if (!response.ok) throw response;

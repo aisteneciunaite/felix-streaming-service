@@ -9,7 +9,6 @@ import Form from '../components/Form';
 import Input from '../components/Input';
 
 import { login } from '../modules/api';
-import { saveToken } from '../modules/token';
 
 // POST  https://academy-video-api.herokuapp.com/auth/login
 // username: tester
@@ -20,7 +19,6 @@ async function signIn(credentials) {
   if (!password || !username) throw new Error('Username and password can not be blank');
   const { token } = await login(credentials);
   if (!token) throw new Error('Login failed');
-  saveToken(token);
   console.log('user logged in');
   return token;
 }
