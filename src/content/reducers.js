@@ -1,17 +1,16 @@
 import * as types from './types';
 const DEFAULT_CONTENT_STATE = {
   items: {
-    loading: false,
     source: null,
     error: null,
     list: [],
     free: null,
   },
   item: {
-    loading: false,
     error: null,
     object: {},
   },
+  loading: false,
   favorites: JSON.parse(localStorage.getItem('favorites')) || [],
 };
 
@@ -25,38 +24,35 @@ function contentReducer(state = DEFAULT_CONTENT_STATE, action) {
       console.log('remove favorite dispatched');
       return { ...state, favorites: state.favorites.filter(id => id !== action.id) };
     }
-    case types.ADD_STORE_MOVIES: {
-      return { ...state, items: { ...state.items, list: action.items } };
-    }
-    case types.SET_STORE_MOVIES_SOURCE: {
-      console.log('movies source set to ', action.itemsSource);
-      return { ...state, items: { ...state.items, source: action.itemsSource } };
+    case types.MOVIES_REQ:
+      return { ...state, loading: true };
+    case types.MOVIES_SUCESS: {
+      return {
+        ...state,
+        items: { ...state.items, list: action.payload, free: action.free },
+        loading: false,
+      };
     }
     case types.MOVIES_FAILURE: {
       return {
         ...state,
-        items: { ...state.items, list: action.payload, error: action.error, loading: false },
+        items: { ...state.items, list: action.payload, error: action.error },
+        loading: false,
       };
     }
-    case types.MOVIES_SUCESS: {
-      return {
-        ...state,
-        items: { ...state.items, list: action.payload, free: action.free, loading: false },
-      };
-    }
-    // case types.MOVIES_REQ:
-    //   return { ...state, items: { ...state.items, loading: true } };
     case types.MOVIE_REQ:
-      return { ...state, items: { ...state.items, loading: true } };
+      return { ...state, loading: true };
     case types.MOVIE_SUCESS:
       return {
         ...state,
-        item: { ...state.item, loading: false, error: null, object: action.payload },
+        item: { ...state.item, error: null, object: action.payload },
+        loading: false,
       };
     case types.MOVIE_FAILURE:
       return {
         ...state,
-        item: { ...state.item, loading: false, error: action.payload, object: {} },
+        item: { ...state.item, error: action.payload, object: {} },
+        loading: false,
       };
     default:
       return state;

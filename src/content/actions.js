@@ -6,12 +6,8 @@ export const toggleFavorite = (id, isFavorite) => {
   }
 };
 
-export const storeContent = items => ({ type: types.ADD_STORE_MOVIES, items });
-
-export const setItemsSource = itemsSource => ({ type: types.SET_STORE_MOVIES_SOURCE, itemsSource });
-
 export const fetchContent = ({ free } = {}) => async dispatch => {
-  // dispatch({ type: types.MOVIES_REQ });
+  dispatch({ type: types.MOVIES_REQ });
   const response = await fetch(
     `https://academy-video-api.herokuapp.com/content/${free ? 'free-' : ''}items`,
     {
@@ -52,4 +48,4 @@ export const fetchItem = id => async dispatch => {
   }
 };
 
-export const pushItem = item => ({ type: types.MOVIE_SUCESS, payload: item });
+export const saveSingleItem = item => ({ type: types.MOVIE_SUCESS, payload: item });
