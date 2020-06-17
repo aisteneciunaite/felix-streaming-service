@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // components
@@ -11,8 +11,11 @@ import auth from '../../../authentication';
 
 // modules
 
-function Header({ authenticaded, token, logout }) {
+function Header() {
   const history = useHistory();
+  const authenticaded = useSelector(state => !!auth.selectors.getToken(state));
+  const token = useSelector(state => auth.selectors.getToken(state));
+  const logout = bindActionCreators(auth.actions.logout, useDispatch());
 
   async function handleSignOut() {
     if (!authenticaded) return;
@@ -34,14 +37,5 @@ function Header({ authenticaded, token, logout }) {
     </header>
   );
 }
-const enhance = connect(
-  state => ({
-    authenticaded: !!auth.selectors.getToken(state),
-    token: auth.selectors.getToken(state),
-  }),
-  dispatch => ({
-    logout: bindActionCreators(auth.actions.logout__xx, dispatch),
-  })
-);
 
-export default enhance(Header);
+export default Header;

@@ -1,13 +1,12 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import auth from '../../../authentication';
 
 function PrivateRoute(props) {
-  return props.authenticaded ? <Route {...props} /> : <Redirect to="/login" />;
+  const authenticated = useSelector(state => !!auth.selectors.getToken(state));
+  return authenticated ? <Route {...props} /> : <Redirect to="/login" />;
 }
 
-const enhance = connect(state => ({ authenticaded: !!auth.selectors.getToken(state) }));
-
-export default enhance(PrivateRoute);
+export default PrivateRoute;

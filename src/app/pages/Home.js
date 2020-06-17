@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import content from '../../content';
-import auth from '../../authentication';
 
 import Button from '../components/Button';
 import Hero from '../components/Hero';
@@ -11,7 +10,9 @@ import MovieCard from '../components/MovieCard';
 import Spinner from '../components/Spinner';
 import heroImage from '../images/cinema.jpg';
 
-function Home({ items }) {
+function Home() {
+  const items = useSelector(state => content.selectors.getStoreItems(state));
+
   const fetchContent = bindActionCreators(content.actions.fetchContent, useDispatch());
 
   useEffect(() => {
@@ -42,9 +43,4 @@ function Home({ items }) {
   );
 }
 
-const enhance = connect(state => ({
-  token: auth.selectors.getToken(state),
-  items: content.selectors.getStoreItems(state),
-}));
-
-export default enhance(Home);
+export default Home;

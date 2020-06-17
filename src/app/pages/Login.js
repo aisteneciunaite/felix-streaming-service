@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import auth from '../../authentication';
 
@@ -12,8 +12,12 @@ import Input from '../components/Input';
 // username: tester
 // passowrd: netflix
 
-function Login({ login, authenticated, status }) {
+function Login() {
   const history = useHistory();
+  const authenticated = useSelector(state => !!auth.selectors.getToken(state));
+  const status = useSelector(state => auth.selectors.getStatus(state));
+  const login = bindActionCreators(auth.actions.login, useDispatch());
+
   const usernameInput = useRef(null);
   const passwordInout = useRef(null);
 
@@ -76,14 +80,4 @@ function Login({ login, authenticated, status }) {
   );
 }
 
-const enhance = connect(
-  state => ({
-    authenticated: !!auth.selectors.getToken(state),
-    status: auth.selectors.getStatus(state),
-  }),
-  dispatch => ({
-    login: bindActionCreators(auth.actions.login, dispatch),
-  })
-);
-
-export default enhance(Login);
+export default Login;

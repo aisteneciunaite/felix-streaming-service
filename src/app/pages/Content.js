@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import content from '../../content';
@@ -8,7 +8,10 @@ import Button from '../components/Button';
 import MovieCard from '../components/MovieCard';
 import Spinner from '../components/Spinner';
 
-function Content({ items, fetchContent }) {
+function Content() {
+  const items = useSelector(state => content.selectors.getStoreItems(state));
+  const fetchContent = bindActionCreators(content.actions.fetchContent, useDispatch());
+
   useEffect(() => {
     (items.free !== false || !items.list.length) && fetchContent();
   }, [fetchContent, items]);
@@ -30,13 +33,4 @@ function Content({ items, fetchContent }) {
   );
 }
 
-const enhance = connect(
-  state => ({
-    items: content.selectors.getStoreItems(state),
-  }),
-  dispatch => ({
-    fetchContent: bindActionCreators(content.actions.fetchContent, dispatch),
-  })
-);
-
-export default enhance(Content);
+export default Content;

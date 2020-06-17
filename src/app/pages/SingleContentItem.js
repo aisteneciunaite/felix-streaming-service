@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 
 import content from '../../content';
@@ -17,10 +17,11 @@ function validateContentId(id) {
   return !!id.match(/(\w{6}-.*-\w{6})/g);
 }
 
-function SingleContentItem({ authenticaded, token }) {
+function SingleContentItem() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const history = useHistory();
+  const authenticaded = useSelector(state => !!auth.selectors.getToken(state));
 
   const storeMovie = useSelector(state => content.selectors.getMovieById(state, id));
   const fetchItem = bindActionCreators(content.actions.fetchItem, dispatch);
@@ -82,9 +83,4 @@ function SingleContentItem({ authenticaded, token }) {
   );
 }
 
-const enhance = connect(state => ({
-  authenticaded: !!auth.selectors.getToken(state),
-  token: auth.selectors.getToken(state),
-}));
-
-export default enhance(SingleContentItem);
+export default SingleContentItem;

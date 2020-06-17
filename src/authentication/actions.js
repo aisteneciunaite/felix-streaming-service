@@ -18,7 +18,7 @@ export const login = ({ username, password }) => async dispatch => {
   }
 };
 
-export const logout__xx = token => async dispatch => {
+export const logout = token => async dispatch => {
   dispatch({ type: types.LOGOUT_REQ });
 
   const response = await fetch(SERVER_URL + '/auth/logout', {
