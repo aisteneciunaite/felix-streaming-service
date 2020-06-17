@@ -36,6 +36,11 @@ function SingleContentItem() {
     }
   }, [fetchItem, id, storeMovie, saveSingleItem]);
 
+  //validate user is logged in
+  useEffect(() => {
+    item && !item.free && !authenticaded && history.replace('/login');
+  }, [item, history, authenticaded]);
+
   useEffect(() => {
     if (item.id !== id) {
       fetchMovie();
@@ -46,11 +51,6 @@ function SingleContentItem() {
   useEffect(() => {
     !validateContentId(id) && history.push('/content');
   }, [id, history]);
-
-  //validate user is logged in
-  useEffect(() => {
-    item && !item.free && !authenticaded && history.push('/login');
-  }, [item, history, authenticaded]);
 
   //modal visible state
   const [showModal, setShowModal] = useState(false);

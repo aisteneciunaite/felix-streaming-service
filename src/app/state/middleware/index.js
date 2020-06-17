@@ -1,3 +1,4 @@
 import thunk from 'redux-thunk';
+import test from './auth';
 
-export default [thunk];
+export default [thunk, test];

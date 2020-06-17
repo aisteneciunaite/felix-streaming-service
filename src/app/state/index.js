@@ -23,6 +23,7 @@ const store = createStore(
 store.subscribe(() => {
   store.getState().content.favorites &&
     localStorage.setItem('favorites', JSON.stringify(store.getState().content.favorites));
+  console.log('favorites saved to local storage');
 });
 
 export default store;

@@ -6,8 +6,7 @@ import content from '../../content';
 
 import Button from '../components/Button';
 import Hero from '../components/Hero';
-import MovieCard from '../components/MovieCard';
-import Spinner from '../components/Spinner';
+import Movies from '../components/Movies';
 import heroImage from '../images/cinema.jpg';
 
 function Home() {
@@ -30,18 +29,11 @@ function Home() {
       </Hero>
 
       <main>
-        {loading ? (
-          <Spinner />
-        ) : (
-          <>
-            <div className="posters">
-              {items && items.map(item => <MovieCard key={item.id} {...item} />)}
-            </div>
-            <Button to="/purchase" className="align-self-center">
-              Get more content
-            </Button>
-          </>
-        )}
+        <Movies items={items} loading={loading}>
+          <Button to="/purchase" className="align-self-center">
+            Get more content
+          </Button>
+        </Movies>
       </main>
     </>
   );

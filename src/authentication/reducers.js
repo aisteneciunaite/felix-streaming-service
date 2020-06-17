@@ -16,7 +16,6 @@ function authReducer(state = DEFAULT_AUTH_STATE, action) {
     case types.LOGIN_FAILURE:
       return { ...state, login: { ...state.login, loading: false, error: action.payload } };
     case types.LOGIN_SUCESS:
-      localStorage.setItem(TOKEN_KEY, action.payload.token);
       return {
         ...state,
         token: action.payload.token,
@@ -25,7 +24,6 @@ function authReducer(state = DEFAULT_AUTH_STATE, action) {
     case types.LOGOUT_REQ:
       return { ...state, login: { ...state.login, loading: true } };
     case types.LOGOUT_SUCESS:
-      localStorage.removeItem(TOKEN_KEY);
       return { ...state, token: null, login: { ...state.login, loading: false, error: null } };
     case types.LOGOUT_FAILURE:
       return { ...state, login: { ...state.login, error: action.payload } };

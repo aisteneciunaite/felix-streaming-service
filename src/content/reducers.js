@@ -29,7 +29,7 @@ function contentReducer(state = DEFAULT_CONTENT_STATE, action) {
     case types.MOVIES_SUCESS: {
       return {
         ...state,
-        items: { ...state.items, list: action.payload, free: action.free },
+        items: { ...state.items, list: action.payload, free: action.free, error: null },
         loading: false,
       };
     }
@@ -51,7 +51,7 @@ function contentReducer(state = DEFAULT_CONTENT_STATE, action) {
     case types.MOVIE_FAILURE:
       return {
         ...state,
-        item: { ...state.item, error: action.payload, object: {} },
+        item: { ...state.item, error: action.error, object: {} },
         loading: false,
       };
     default:

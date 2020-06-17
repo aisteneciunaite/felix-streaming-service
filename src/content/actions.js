@@ -18,19 +18,19 @@ export const fetchContent = ({ free } = {}) => async dispatch => {
       },
     }
   );
-  if (!response.ok) {
+  if (response.ok) {
+    dispatch({ type: types.MOVIES_SUCESS, payload: await response.json(), free: !!free });
+  } else {
     dispatch({
       type: types.MOVIES_FAILURE,
       payload: await response.json(),
-      error: 'Oops, only free content',
+      error: response.status,
     });
-  } else {
-    dispatch({ type: types.MOVIES_SUCESS, payload: await response.json(), free: !!free });
   }
 };
 
 export const fetchItem = id => async dispatch => {
-  // dispatch({ type: types.MOVIE_REQ });
+  dispatch({ type: types.MOVIE_REQ });
   const response = await fetch('https://academy-video-api.herokuapp.com/content/items/' + id, {
     method: 'GET',
     headers: {
@@ -38,13 +38,10 @@ export const fetchItem = id => async dispatch => {
       authorization: localStorage.getItem('x-auth-node'),
     },
   });
-  if (!response.ok) {
-    dispatch({
-      type: types.MOVIE_FAILURE,
-      payload: await response.json(),
-    });
-  } else {
+  if (response.ok) {
     dispatch({ type: types.MOVIE_SUCESS, payload: await response.json() });
+  } else {
+    dispatch({ type: types.MOVIE_FAILURE, error: response.status });
   }
 };
 
