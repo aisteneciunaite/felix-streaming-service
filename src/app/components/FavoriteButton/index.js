@@ -1,13 +1,15 @@
 import React from 'react';
 
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import content from '../../../content';
 
 import Button from '../Button';
 
-function FavoriteButton({ id, favorites, isFavorite, toggleFavorite }) {
+function FavoriteButton({ id }) {
+  const isFavorite = useSelector(state => content.selectors.isFavoriteById(state, id));
+  const toggleFavorite = bindActionCreators(content.actions.toggleFavorite, useDispatch());
   const buttonText = isFavorite ? 'Remove 💔' : 'Favorite';
 
   const handleClick = () => {
@@ -20,12 +22,4 @@ function FavoriteButton({ id, favorites, isFavorite, toggleFavorite }) {
   );
 }
 
-const enhance = connect(
-  (state, { id }) => ({
-    favorites: content.selectors.getFavorites(state),
-    isFavorite: content.selectors.isFavoriteById(state, id),
-  }),
-  dispatch => ({ toggleFavorite: bindActionCreators(content.actions.toggleFavorite, dispatch) })
-);
-
-export default enhance(FavoriteButton);
+export default FavoriteButton;

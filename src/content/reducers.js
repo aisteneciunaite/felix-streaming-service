@@ -7,6 +7,11 @@ const DEFAULT_CONTENT_STATE = {
     list: [],
     free: null,
   },
+  item: {
+    loading: false,
+    error: null,
+    object: {},
+  },
   favorites: JSON.parse(localStorage.getItem('favorites')) || [],
 };
 
@@ -39,11 +44,27 @@ function contentReducer(state = DEFAULT_CONTENT_STATE, action) {
         items: { ...state.items, list: action.payload, free: action.free, loading: false },
       };
     }
-    case types.MOVIES_REQ:
-      return { ...state, movies: { ...state.items, loading: true } };
+    // case types.MOVIES_REQ:
+    //   return { ...state, items: { ...state.items, loading: true } };
+    case types.MOVIE_REQ:
+      return { ...state, items: { ...state.items, loading: true } };
+    case types.MOVIE_SUCESS:
+      return {
+        ...state,
+        item: { ...state.item, loading: false, error: null, object: action.payload },
+      };
+    case types.MOVIE_FAILURE:
+      return {
+        ...state,
+        item: { ...state.item, loading: false, error: action.payload, object: {} },
+      };
     default:
       return state;
   }
 }
+
+export const MOVIE_FAILURE = 'CONTENT.MOVIE_FAILURE';
+export const MOVIE_SUCESS = 'CONTENT.MOVIE_SUCESS';
+export const MOVIE_REQ = 'CONTENT.MOVIE_REQ';
 
 export default contentReducer;

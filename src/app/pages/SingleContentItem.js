@@ -1,11 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState, useCallback } from 'react';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 
 import content from '../../content';
 import auth from '../../authentication';
-
-import useFetch from '../modules/useFetch';
 
 import Spinner from '../components/Spinner';
 import Title from '../components/Title';
@@ -13,24 +11,35 @@ import Button from '../components/Button';
 import FavoriteButton from '../components/FavoriteButton';
 import Poster from '../components/Poster';
 import ModalVideo from '../components/ModalVideo';
+import { bindActionCreators } from 'redux';
 
 function validateContentId(id) {
   return !!id.match(/(\w{6}-.*-\w{6})/g);
 }
 
-function SingleContentItem({ authenticaded, getStoreMovie, token }) {
+function SingleContentItem({ authenticaded, token }) {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const history = useHistory();
 
-  //fetching content
-  const headers = useRef({ authorization: token });
-  const { isLoaded, payload: item } = useFetch(
-    `/content/items/${id}`,
-    'GET',
-    headers.current,
-    getStoreMovie(id),
-    false
-  );
+  const storeMovie = useSelector(state => content.selectors.getMovieById(state, id));
+  const fetchItem = bindActionCreators(content.actions.fetchItem, dispatch);
+  const pushItem = bindActionCreators(content.actions.pushItem, dispatch);
+  const item = useSelector(state => content.selectors.getSingleItem(state));
+
+  const fetchMovie = useCallback(() => {
+    if (storeMovie) {
+      pushItem(storeMovie);
+    } else {
+      fetchItem(id);
+    }
+  }, [fetchItem, id, storeMovie, pushItem]);
+
+  useEffect(() => {
+    if (item.id !== id) {
+      fetchMovie();
+    }
+  }, [fetchMovie, id, item.id]);
 
   //validate url parameter, might be unnecesary
   useEffect(() => {
@@ -48,7 +57,7 @@ function SingleContentItem({ authenticaded, getStoreMovie, token }) {
     setShowModal(true);
   }
 
-  return !isLoaded ? (
+  return !item ? (
     <Spinner />
   ) : (
     <>
@@ -76,7 +85,6 @@ function SingleContentItem({ authenticaded, getStoreMovie, token }) {
 const enhance = connect(state => ({
   authenticaded: !!auth.selectors.getToken(state),
   token: auth.selectors.getToken(state),
-  getStoreMovie: id => content.selectors.getMovieById(state, id),
 }));
 
 export default enhance(SingleContentItem);

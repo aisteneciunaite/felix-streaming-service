@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import content from '../../content';
@@ -11,7 +11,9 @@ import MovieCard from '../components/MovieCard';
 import Spinner from '../components/Spinner';
 import heroImage from '../images/cinema.jpg';
 
-function Home({ items, fetchContent }) {
+function Home({ items }) {
+  const fetchContent = bindActionCreators(content.actions.fetchContent, useDispatch());
+
   useEffect(() => {
     (items.free !== true || !items.list.length) && fetchContent({ free: true });
   }, [fetchContent, items]);
@@ -40,14 +42,9 @@ function Home({ items, fetchContent }) {
   );
 }
 
-const enhance = connect(
-  state => ({
-    token: auth.selectors.getToken(state),
-    items: content.selectors.getStoreItems(state),
-  }),
-  dispatch => ({
-    fetchContent: bindActionCreators(content.actions.fetchContent, dispatch),
-  })
-);
+const enhance = connect(state => ({
+  token: auth.selectors.getToken(state),
+  items: content.selectors.getStoreItems(state),
+}));
 
 export default enhance(Home);
