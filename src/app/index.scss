@@ -6,8 +6,36 @@ main {
   background: radial-gradient(var(--dark-grey), #000);
 }
 
+.Purchase__Form {
+  max-width: 826px;
+  padding: 18px 30px;
+
+  .Button {
+    align-self: flex-end;
+  }
+}
+
+.Purchase__CardDeck {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 2em;
+}
+
+.Login__Form {
+  max-width: 672px;
+  padding: 60px;
+
+  .Button {
+    align-self: center;
+  }
+}
+
 .align-self-center {
   align-self: center;
+}
+
+.align-self-end {
+  align-self: flex-end;
 }
 
 .posters {

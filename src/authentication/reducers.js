@@ -2,22 +2,33 @@ import * as types from './types';
 
 const TOKEN_KEY = 'x-auth-node';
 const DEFAULT_AUTH_STATE = {
-  isLoggedIn: !!localStorage.getItem(TOKEN_KEY),
   token: localStorage.getItem(TOKEN_KEY),
-  error: null,
+  login: {
+    loading: false,
+    error: null,
+  },
 };
 
 function authReducer(state = DEFAULT_AUTH_STATE, action) {
   switch (action.type) {
-    case types.LOG_IN:
-      action.token && localStorage.setItem(TOKEN_KEY, action.token);
-      return { ...state, isLoggedIn: true, token: action.token };
-    case types.LOG_OUT:
+    case types.LOGIN_REQ:
+      return { ...state, login: { ...state.login, loading: true } };
+    case types.LOGIN_FAILURE:
+      return { ...state, login: { ...state.login, loading: false, error: action.payload } };
+    case types.LOGIN_SUCESS:
+      localStorage.setItem(TOKEN_KEY, action.payload.token);
+      return {
+        ...state,
+        token: action.payload.token,
+        login: { ...state.login, loading: false, error: null },
+      };
+    case types.LOGOUT_REQ:
+      return { ...state, login: { ...state.login, loading: true } };
+    case types.LOGOUT_SUCESS:
       localStorage.removeItem(TOKEN_KEY);
-      return { ...state, isLoggedIn: false, token: null };
-    case types.AUTH_ERROR: {
-      return { ...state, error: action.error };
-    }
+      return { ...state, token: null, login: { ...state.login, loading: false, error: null } };
+    case types.LOGOUT_FAILURE:
+      return { ...state, login: { ...state.login, error: action.payload } };
     default:
       return state;
   }

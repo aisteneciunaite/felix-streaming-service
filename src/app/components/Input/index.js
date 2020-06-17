@@ -4,6 +4,7 @@ import './index.scss';
 import icon from '../../images/eye-icon.svg';
 
 function Input(props) {
+  const classes = props.className ? `Input ${props.className}` : 'Input';
   const [state, setstate] = useState({ type: props.input.type });
 
   function togglePasswordDisplay() {
@@ -23,7 +24,7 @@ function Input(props) {
     />
   );
   return (
-    <div className="Input">
+    <div className={classes}>
       <label className="Input__label" htmlFor={id}>
         {labelContent}
       </label>

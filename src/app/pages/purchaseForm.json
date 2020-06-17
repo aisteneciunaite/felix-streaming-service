@@ -1,0 +1,46 @@
+{
+  "createUserInputs": [
+    {
+      "id": "email",
+      "labelContent": "Email",
+      "type": "text"
+    },
+    {
+      "id": "password",
+      "labelContent": "Password",
+      "type": "password"
+    },
+    {
+      "id": "repeatPassword",
+      "labelContent": "Repeat Password",
+      "type": "password"
+    }
+  ],
+  "paymentInputs": [
+    {
+      "id": "firstName",
+      "labelContent": "First Name",
+      "type": "text"
+    },
+    {
+      "id": "lastName",
+      "labelContent": "Last Name",
+      "type": "text"
+    },
+    {
+      "id": "cardNumber",
+      "labelContent": "Card Number",
+      "type": "text"
+    },
+    {
+      "id": "expDate",
+      "labelContent": "Expiry date MM/YY",
+      "type": "text"
+    },
+    {
+      "id": "cvvNumber",
+      "labelContent": "CVV",
+      "type": "number"
+    }
+  ]
+}

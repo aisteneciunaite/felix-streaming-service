@@ -10,17 +10,13 @@ import Button from '../Button';
 import auth from '../../../authentication';
 
 // modules
-import { logout } from '../../modules/api';
-// import { removeToken } from '../../modules/token';
 
-function Header({ isLoggedIn, dispatchLogOut, token }) {
+function Header({ authenticaded, token, logout }) {
   const history = useHistory();
 
   async function handleSignOut() {
-    if (!isLoggedIn) return;
+    if (!authenticaded) return;
     await logout(token);
-    dispatchLogOut(token);
-    // removeToken();
     console.log('user logged out');
     history.push('/');
   }
@@ -30,7 +26,7 @@ function Header({ isLoggedIn, dispatchLogOut, token }) {
       <Link className="logo" to="/">
         <span>F</span>
       </Link>
-      {isLoggedIn ? (
+      {authenticaded ? (
         <Button onClick={handleSignOut}>Sign out</Button>
       ) : (
         <Button to="/login">Sign in</Button>
@@ -40,10 +36,12 @@ function Header({ isLoggedIn, dispatchLogOut, token }) {
 }
 const enhance = connect(
   state => ({
-    isLoggedIn: auth.selectors.getLoginState(state),
+    authenticaded: !!auth.selectors.getToken(state),
     token: auth.selectors.getToken(state),
   }),
-  dispatch => ({ dispatchLogOut: bindActionCreators(auth.actions.logout, dispatch) })
+  dispatch => ({
+    logout: bindActionCreators(auth.actions.logout__xx, dispatch),
+  })
 );
 
 export default enhance(Header);

@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import auth from '../../../authentication';
 
 function PrivateRoute(props) {
-  return props.isLoggedIn ? <Route {...props} /> : <Redirect to="/login" />;
+  return props.authenticaded ? <Route {...props} /> : <Redirect to="/login" />;
 }
 
-const enhance = connect(state => ({ isLoggedIn: auth.selectors.getLoginState(state) }));
+const enhance = connect(state => ({ authenticaded: !!auth.selectors.getToken(state) }));
 
 export default enhance(PrivateRoute);

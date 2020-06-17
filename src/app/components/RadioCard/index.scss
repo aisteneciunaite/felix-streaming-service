@@ -1,0 +1,12 @@
+.RadioCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 7px;
+  &__marker {
+    align-self: flex-start;
+  }
+}

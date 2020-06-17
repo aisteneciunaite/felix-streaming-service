@@ -18,7 +18,7 @@ function validateContentId(id) {
   return !!id.match(/(\w{6}-.*-\w{6})/g);
 }
 
-function SingleContentItem({ isLoggedIn, getStoreMovie, token }) {
+function SingleContentItem({ authenticaded, getStoreMovie, token }) {
   const { id } = useParams();
   const history = useHistory();
 
@@ -39,8 +39,8 @@ function SingleContentItem({ isLoggedIn, getStoreMovie, token }) {
 
   //validate user is logged in
   useEffect(() => {
-    item && !item.free && !isLoggedIn && history.push('/login');
-  }, [item, history, isLoggedIn]);
+    item && !item.free && !authenticaded && history.push('/login');
+  }, [item, history, authenticaded]);
 
   //modal visible state
   const [showModal, setShowModal] = useState(false);
@@ -74,7 +74,7 @@ function SingleContentItem({ isLoggedIn, getStoreMovie, token }) {
 }
 
 const enhance = connect(state => ({
-  isLoggedIn: auth.selectors.getLoginState(state),
+  authenticaded: !!auth.selectors.getToken(state),
   token: auth.selectors.getToken(state),
   getStoreMovie: id => content.selectors.getMovieById(state, id),
 }));
