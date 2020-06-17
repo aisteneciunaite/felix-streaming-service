@@ -25,16 +25,16 @@ function SingleContentItem() {
 
   const storeMovie = useSelector(state => content.selectors.getMovieById(state, id));
   const fetchItem = bindActionCreators(content.actions.fetchItem, dispatch);
-  const pushItem = bindActionCreators(content.actions.pushItem, dispatch);
+  const saveSingleItem = bindActionCreators(content.actions.saveSingleItem, dispatch);
   const item = useSelector(state => content.selectors.getSingleItem(state));
 
   const fetchMovie = useCallback(() => {
     if (storeMovie) {
-      pushItem(storeMovie);
+      saveSingleItem(storeMovie);
     } else {
       fetchItem(id);
     }
-  }, [fetchItem, id, storeMovie, pushItem]);
+  }, [fetchItem, id, storeMovie, saveSingleItem]);
 
   useEffect(() => {
     if (item.id !== id) {

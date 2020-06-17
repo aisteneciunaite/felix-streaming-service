@@ -12,12 +12,16 @@ import heroImage from '../images/cinema.jpg';
 
 function Home() {
   const items = useSelector(state => content.selectors.getStoreItems(state));
+  const isFree = useSelector(state => content.selectors.isStoreItemsFree(state));
+  const loading = useSelector(state => content.selectors.isContentLoading(state));
 
   const fetchContent = bindActionCreators(content.actions.fetchContent, useDispatch());
 
   useEffect(() => {
-    (items.free !== true || !items.list.length) && fetchContent({ free: true });
-  }, [fetchContent, items]);
+    if ((isFree !== true || !items.length) && !loading) {
+      fetchContent({ free: true });
+    }
+  }, [fetchContent, items.length, loading, isFree]);
 
   return (
     <>
@@ -26,12 +30,12 @@ function Home() {
       </Hero>
 
       <main>
-        {items.loading ? (
+        {loading ? (
           <Spinner />
         ) : (
           <>
             <div className="posters">
-              {items.list && items.list.map(item => <MovieCard key={item.id} {...item} />)}
+              {items && items.map(item => <MovieCard key={item.id} {...item} />)}
             </div>
             <Button to="/purchase" className="align-self-center">
               Get more content
