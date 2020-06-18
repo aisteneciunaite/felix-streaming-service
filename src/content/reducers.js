@@ -6,10 +6,6 @@ const DEFAULT_CONTENT_STATE = {
     list: [],
     free: null,
   },
-  item: {
-    error: null,
-    object: {},
-  },
   loading: false,
   favorites: JSON.parse(localStorage.getItem('favorites')) || [],
 };
@@ -45,13 +41,13 @@ function contentReducer(state = DEFAULT_CONTENT_STATE, action) {
     case types.MOVIE_SUCESS:
       return {
         ...state,
-        item: { ...state.item, error: null, object: action.payload },
+        items: { ...state.items, error: null, list: [...state.items.list, action.payload] },
         loading: false,
       };
     case types.MOVIE_FAILURE:
       return {
         ...state,
-        item: { ...state.item, error: action.error, object: {} },
+        items: { ...state.items, error: action.error },
         loading: false,
       };
     default:

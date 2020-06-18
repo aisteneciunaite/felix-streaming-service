@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 
@@ -23,18 +23,8 @@ function SingleContentItem() {
   const history = useHistory();
   const authenticaded = useSelector(state => !!auth.selectors.getToken(state));
 
-  const storeMovie = useSelector(state => content.selectors.getMovieById(state, id));
+  const item = useSelector(state => content.selectors.getMovieById(state, id));
   const fetchItem = bindActionCreators(content.actions.fetchItem, dispatch);
-  const saveSingleItem = bindActionCreators(content.actions.saveSingleItem, dispatch);
-  const item = useSelector(state => content.selectors.getSingleItem(state));
-
-  const fetchMovie = useCallback(() => {
-    if (storeMovie) {
-      saveSingleItem(storeMovie);
-    } else {
-      fetchItem(id);
-    }
-  }, [fetchItem, id, storeMovie, saveSingleItem]);
 
   //validate user is logged in
   useEffect(() => {
@@ -42,10 +32,8 @@ function SingleContentItem() {
   }, [item, history, authenticaded]);
 
   useEffect(() => {
-    if (item.id !== id) {
-      fetchMovie();
-    }
-  }, [fetchMovie, id, item.id]);
+    !item && fetchItem(id);
+  }, [id, item, fetchItem]);
 
   //validate url parameter, might be unnecesary
   useEffect(() => {
